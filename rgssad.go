@@ -5,12 +5,11 @@ package rpgo
 import (
 	"bytes"
 	"encoding/binary"
-	"errors"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -60,18 +59,24 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 	var outputPath string
 
 	if createDirectory {
-		directoryPath := path.Dir(archivedFile.Name)
+		// directoryPath := path.Dir(strings.Replace(archivedFile.Name, "\\", "/", -1))
 
-		if directoryPath == "." {
-			return errors.New("rpgo/rgssad: invalid file path")
+		// if directoryPath == "." {
+		// 	return errors.New("rpgo/rgssad: invalid file path")
+		// }
+
+		outputPath = filepath.Join(outputDirectoryPath, archivedFile.Name)
+		err := os.Mkdir(filepath.Dir(outputPath), os.ModeDir)
+		_, err2 := os.Stat(filepath.Dir(outputPath))
+
+		if err != nil && os.IsNotExist(err2) {
+			return err
 		}
-
-		outputPath = path.Join(outputDirectoryPath, directoryPath)
 	} else {
 		splitted := strings.Split(archivedFile.Name, "\\")
 		filename := splitted[len(splitted)-1]
 
-		outputPath = path.Join(outputDirectoryPath, filename)
+		outputPath = filepath.Join(outputDirectoryPath, filename)
 	}
 
 	rpg.ByteReader.Seek(archivedFile.Offset, io.SeekStart)
@@ -90,10 +95,15 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 }
 
 // Currently overwrite existing is ignored
-func (rpg *RGSSAD) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) {
+func (rpg *RGSSAD) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) error {
 	for _, archivedFile := range rpg.ArchivedFiles {
-		rpg.ExtractFile(archivedFile, outputDirectoryPath, overrideExisting, true)
+		err := rpg.ExtractFile(archivedFile, outputDirectoryPath, overrideExisting, true)
+		if err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
 func (*RGSSAD) decryptFileData(encryptedFileData []byte, key uint32) []byte {
