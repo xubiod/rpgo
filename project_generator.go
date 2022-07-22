@@ -8,7 +8,7 @@ import (
 	"path"
 )
 
-func GenerateProject(version RPGMakerVersion, outputPath string) {
+func GenerateProject(version RPGMakerVersion, outputPath string) error {
 	var content string
 	var extension string
 	var ini string
@@ -35,14 +35,14 @@ func GenerateProject(version RPGMakerVersion, outputPath string) {
 	file, err := os.Create(path.Join(outputPath, fmt.Sprintf("Game.%s", extension)))
 
 	if err != nil {
-		panic("a")
+		return err
 	}
 
 	_, err = file.WriteString(content)
 
 	if err != nil {
 		file.Close()
-		panic("b")
+		return err
 	}
 
 	file.Close()
@@ -50,15 +50,17 @@ func GenerateProject(version RPGMakerVersion, outputPath string) {
 	file, err = os.Create(path.Join(outputPath, "Game.ini"))
 
 	if err != nil {
-		panic("c")
+		return err
 	}
 
 	_, err = file.WriteString(ini)
 
 	if err != nil {
 		file.Close()
-		panic("d")
+		return err
 	}
 
 	file.Close()
+
+	return nil
 }
