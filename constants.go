@@ -6,9 +6,9 @@ const XpArchiveName = "Game.rgssad"
 const VxArchiveName = "Game.rgss2a"
 const VxAceArchiveName = "Game.rgss3a"
 
-const XpProjectFileContent = "RPGXP 1.02"
-const VxProjectFileContent = "RPGVX 1.02"
-const VxAceProjectFileContent = "RPGVXAce 1.00"
+const XpProjectFileContent = "RPGXP 1.05"
+const VxProjectFileContent = "RPGVX 1.03"
+const VxAceProjectFileContent = "RPGVXAce 1.02"
 
 const XpProjectFileExtension = "rxproj"
 const VxProjectFileExtension = "rvproj"
