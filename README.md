@@ -7,3 +7,6 @@ version [here](https://github.com/uuksu/RPGMakerDecrypter/).
 This was mainly an exercise with Go and the testing capabilities. All current
 tests pass. As of writing I want to implement more tests, as current coverage is
 at 58.9%.
+
+**The untested functions are not guaranteed to work, period. Do not use this as**
+**a basis for any production-level project yet.**
