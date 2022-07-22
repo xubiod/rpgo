@@ -7,6 +7,8 @@ import (
 	"encoding/binary"
 	"errors"
 	"io"
+	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -14,20 +16,35 @@ import (
 
 type RGSSAD struct {
 	Filepath      string
+	Data          []byte
 	ByteReader    bytes.Reader
 	ArchivedFiles []RPGMakerArchivedFile
 }
 
-func (RGSSAD) Make(filepath string) *RGSSAD {
+func MakeRGSSAD(filepath string) *RGSSAD {
 	created := new(RGSSAD)
 	created.Filepath = filepath
+
+	f, _ := os.Open(created.Filepath)
+
+	var err error
+	created.Data, err = ioutil.ReadAll(f)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	f.Close()
+
+	created.ByteReader = *bytes.NewReader(created.Data)
+
 	return created
 }
 
 func (rpg *RGSSAD) GetVersion() (RPGMakerVersion, error) {
 	var header string
 
-	header, err := ReadCString(rpg.ByteReader, 7)
+	header, err := ReadCString(&rpg.ByteReader, 7)
 
 	if header != RGSSADHeader || err != nil {
 		return RPGMakerInvalid, err

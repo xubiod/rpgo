@@ -10,13 +10,12 @@ import (
 
 type RGSSADv3 RGSSAD
 
-func (RGSSADv3) Make(filepath string) (*RGSSADv3, error) {
-	created := new(RGSSADv3)
-	created.Filepath = filepath
+func MakeRGSSADv3(filepath string) (*RGSSADv3, error) {
+	created := (*RGSSADv3)(MakeRGSSAD(filepath))
 
 	version, err := ((*RGSSAD)(created)).GetVersion()
 
-	if version != RGASSDv1 || err != nil {
+	if version != RGASSDv3 || err != nil {
 		return nil, fmt.Errorf("rpgo/rgssadv3: version not v3 or this:\n%s", err.Error())
 	}
 
@@ -30,11 +29,7 @@ func (rpg *RGSSADv3) readRGSSAD() {
 
 	t := make([]byte, 4)
 	rpg.ByteReader.Read(t)
-	var num int
-	for _, e := range t {
-		num = num << 8
-		num |= int(e)
-	}
+	num := int(binary.LittleEndian.Uint32(t))
 
 	key := uint(num)
 
@@ -46,61 +41,53 @@ func (rpg *RGSSADv3) readRGSSAD() {
 	for {
 		newArchivedFile := new(RPGMakerArchivedFile)
 
-		t = make([]byte, 4)
+		// OFFSET
 		rpg.ByteReader.Read(t)
-		var num int
-		for _, e := range t {
-			num = num << 8
-			num |= int(e)
-		}
+		num = int(binary.LittleEndian.Uint32(t))
 
-		nameLen := rpg.decryptInteger(num, &key)
-
-		t = make([]byte, nameLen)
-
-		rpg.ByteReader.Read(t)
-		newArchivedFile.Name = rpg.decryptFilename(t, &key)
+		newArchivedFile.Offset = int64(rpg.decryptInteger(num, key))
 
 		// SIZE
-
-		t = make([]byte, 4)
 		rpg.ByteReader.Read(t)
-		num = 0
-		for _, e := range t {
-			num = num << 8
-			num |= int(e)
-		}
+		num = int(binary.LittleEndian.Uint32(t))
 
-		newArchivedFile.Size = rpg.decryptInteger(num, &key)
+		newArchivedFile.Size = rpg.decryptInteger(num, key)
 
-		// END SIZE
+		// KEY
+		rpg.ByteReader.Read(t)
+		num = int(binary.LittleEndian.Uint32(t))
 
-		newArchivedFile.Offset, _ = rpg.ByteReader.Seek(0, io.SeekCurrent)
-		newArchivedFile.Key = key
+		newArchivedFile.Key = uint(rpg.decryptInteger(num, key))
 
-		rpg.ArchivedFiles = append(rpg.ArchivedFiles, *newArchivedFile)
-		/// TODO: UNFUCK ALL OF THIS
-
-		status, _ := rpg.ByteReader.Seek(0, io.SeekCurrent)
-		if status == int64(rpg.ByteReader.Len()) {
+		if newArchivedFile.Offset == 0 {
 			break
 		}
+
+		// NAME
+		rpg.ByteReader.Read(t)
+		num := int(binary.LittleEndian.Uint32(t))
+
+		nameLen := rpg.decryptInteger(num, key)
+
+		u := make([]byte, nameLen)
+
+		rpg.ByteReader.Read(u)
+		newArchivedFile.Name = rpg.decryptFilename(u, key)
+
+		rpg.ArchivedFiles = append(rpg.ArchivedFiles, *newArchivedFile)
 	}
 }
 
-func (*RGSSADv3) decryptInteger(value int, key *uint) int {
-	result := uint(value) ^ *key
-	// *key *= 7
-	// *key += 3
-
+func (*RGSSADv3) decryptInteger(value int, key uint) int {
+	result := int64(value) ^ int64(key)
 	return int(result)
 }
 
-func (*RGSSADv3) decryptFilename(encryptedName []byte, key *uint) string {
+func (*RGSSADv3) decryptFilename(encryptedName []byte, key uint) string {
 	var decryptedName string
 
 	keyBytes := make([]byte, 4)
-	binary.LittleEndian.PutUint32(keyBytes, uint32(*key))
+	binary.LittleEndian.PutUint32(keyBytes, uint32(key))
 	i := 0
 	j := 0
 
