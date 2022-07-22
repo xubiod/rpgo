@@ -8,7 +8,7 @@ This was mainly an exercise with Go and the testing capabilities.
 
 ## Tests
 
-**Current coverage as reported by `go test -cover`: 87.4%**
+**Current coverage as reported by `go test -cover`: 88.3%**
 
 Currently all tests that were in the C# original have been implemented and all
 pass.

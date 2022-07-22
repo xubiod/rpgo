@@ -3,6 +3,7 @@ package rpgo
 // RPGMakerDecrypter.Decrypter/ProjectGenerator.cs
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -27,9 +28,7 @@ func GenerateProject(version RPGMakerVersion, outputPath string) error {
 		extension = VxAceProjectFileExtension
 		ini = VxAceIniFileContents
 	default:
-		content = ""
-		extension = ""
-		ini = ""
+		return errors.New("rpgo/generateproject: no valid archive version")
 	}
 
 	file, err := os.Create(path.Join(outputPath, fmt.Sprintf("Game.%s", extension)))
