@@ -65,13 +65,22 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 		// 	return errors.New("rpgo/rgssad: invalid file path")
 		// }
 
-		outputPath = filepath.Join(outputDirectoryPath, archivedFile.Name)
-		err := os.Mkdir(filepath.Dir(outputPath), os.ModeDir)
-		_, err2 := os.Stat(filepath.Dir(outputPath))
+		subDirectories := strings.Split(archivedFile.Name, string(filepath.Separator))
+		subDirectories = subDirectories[:len(subDirectories)-1]
 
-		if err != nil && os.IsNotExist(err2) {
-			return err
+		outputPath = outputDirectoryPath
+
+		for _, itm := range subDirectories {
+			outputPath = filepath.Join(outputPath, itm)
+			err := os.Mkdir( /*filepath.Dir(*/ outputPath, os.ModeDir)
+			_, err2 := os.Stat(filepath.Dir(outputPath))
+
+			if os.IsNotExist(err) && os.IsNotExist(err2) {
+				return err
+			}
 		}
+
+		outputPath = filepath.Join(outputPath, strings.Split(archivedFile.Name, string(filepath.Separator))[len(subDirectories)])
 	} else {
 		splitted := strings.Split(archivedFile.Name, "\\")
 		filename := splitted[len(splitted)-1]
