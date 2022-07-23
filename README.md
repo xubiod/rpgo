@@ -24,8 +24,3 @@ pass.
 
 Tests were added for encrypted file extracting for all supported versions. This
 is redundant but all tests pass.
-
-## Disclaimer
-
-**The untested functions are not guaranteed to work, period. Do not use this as**
-**a basis for any production-level project yet.**
