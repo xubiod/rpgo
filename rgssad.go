@@ -92,15 +92,19 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 	data := make([]byte, archivedFile.Size)
 	rpg.ByteReader.Read(data)
 
-	finalFile, err := os.Create(outputPath)
+	if _, err := os.Stat(outputPath); os.IsNotExist(err) || overwriteExisting {
+		finalFile, err := os.Create(outputPath)
 
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
+
+		finalFile.Write(rpg.decryptFileData(data, uint32(archivedFile.Key)))
+
+		return finalFile.Close()
 	}
 
-	finalFile.Write(rpg.decryptFileData(data, uint32(archivedFile.Key)))
-
-	return finalFile.Close()
+	return nil
 }
 
 // Currently overwrite existing is ignored

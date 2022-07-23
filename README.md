@@ -8,7 +8,7 @@ This was mainly an exercise with Go and the testing capabilities.
 
 ## Tests
 
-**Current coverage as reported by `go test -cover`: 91.3%**
+**Current coverage as reported by `go test -cover`: 90.9%**
 
 |File|Coverage|
 |-|-|

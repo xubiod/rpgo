@@ -11,9 +11,11 @@ import (
 func main() {
 	var extractAllPath string
 	var dumpInto string
+	var overrideFiles bool
 
 	flag.StringVar(&extractAllPath, "extract", "", "project to extract all files from")
 	flag.StringVar(&dumpInto, "o", "", "output directory (can overwrite files)")
+	flag.BoolVar(&overrideFiles, "overwrite-files", false, "overwrite existing files")
 
 	flag.Parse()
 
@@ -42,7 +44,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		err = goat.ExtractAllFiles(dumpInto, true)
+		err = goat.ExtractAllFiles(dumpInto, overrideFiles)
 
 		if err != nil {
 			fmt.Printf("error extracting files: %s", err)
@@ -61,7 +63,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		err = goat.ExtractAllFiles(dumpInto, true)
+		err = goat.ExtractAllFiles(dumpInto, overrideFiles)
 
 		if err != nil {
 			fmt.Printf("error extracting files: %s", err)
