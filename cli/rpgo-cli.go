@@ -9,14 +9,14 @@ import (
 )
 
 func main() {
-	var inputPath string
+	var input string
 	var action string
-	var dumpInto string
+	var output string
 	var overrideFiles bool
 
-	flag.StringVar(&inputPath, "i", "", "project to do action")
+	flag.StringVar(&input, "i", "", "project to do action")
 	flag.StringVar(&action, "action", "", "action to perform, always required, detailed below")
-	flag.StringVar(&dumpInto, "o", "", "output directory")
+	flag.StringVar(&output, "o", "", "output directory")
 	flag.BoolVar(&overrideFiles, "overwrite-files", false, "overwrite existing files")
 
 	flag.Parse()
@@ -25,17 +25,17 @@ func main() {
 		doDefaults()
 	}
 
-	_, err := os.Stat(inputPath)
+	_, err := os.Stat(input)
 	if errors.Is(err, os.ErrNotExist) {
-		fmt.Println(fmt.Errorf("archive does not exist: %s", inputPath).Error())
+		fmt.Println(fmt.Errorf("archive does not exist: %s", input).Error())
 		os.Exit(1)
 	}
 
-	goatVersion := rpgo.GetRPGMakerVersion(inputPath)
+	goatVersion := rpgo.GetRPGMakerVersion(input)
 
 	switch action {
 	case "extract", "decrypt", "dump":
-		if len(inputPath) == 0 || len(dumpInto) == 0 {
+		if len(input) == 0 || len(output) == 0 {
 			doDefaults()
 		}
 
@@ -43,40 +43,40 @@ func main() {
 		case rpgo.RPGMakerXp, rpgo.RPGMakerVx:
 			var goat *rpgo.RGSSADv1
 
-			goat, err = rpgo.MakeRGSSADv1(inputPath)
+			goat, err = rpgo.MakeRGSSADv1(input)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv1: %s", err)
 				os.Exit(1)
 			}
 
-			err = goat.ExtractAllFiles(dumpInto, overrideFiles)
+			err = goat.ExtractAllFiles(output, overrideFiles)
 
 			if err != nil {
 				fmt.Printf("error extracting files: %s", err)
 				os.Exit(1)
 			}
 
-			fmt.Printf("extract completed located at %s", dumpInto)
+			fmt.Printf("extract completed located at %s", output)
 
 		case rpgo.RPGMakerVxAce:
 			var goat *rpgo.RGSSADv3
 
-			goat, err = rpgo.MakeRGSSADv3(inputPath)
+			goat, err = rpgo.MakeRGSSADv3(input)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv3: %s", err)
 				os.Exit(1)
 			}
 
-			err = goat.ExtractAllFiles(dumpInto, overrideFiles)
+			err = goat.ExtractAllFiles(output, overrideFiles)
 
 			if err != nil {
 				fmt.Printf("error extracting files: %s", err)
 				os.Exit(1)
 			}
 
-			fmt.Printf("extract completed located at %s", dumpInto)
+			fmt.Printf("extract completed located at %s", output)
 
 		default:
 			fmt.Println("invalid archive")
@@ -84,13 +84,13 @@ func main() {
 		}
 
 	case "files", "list", "ls":
-		if len(inputPath) == 0 {
+		if len(input) == 0 {
 			doDefaults()
 		}
 		var goat *rpgo.RGSSAD
 		switch goatVersion {
 		case rpgo.RPGMakerXp, rpgo.RPGMakerVx:
-			tempgoat, err := rpgo.MakeRGSSADv1(inputPath)
+			tempgoat, err := rpgo.MakeRGSSADv1(input)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv1: %s", err)
@@ -100,7 +100,7 @@ func main() {
 			goat = (*rpgo.RGSSAD)(tempgoat)
 
 		case rpgo.RPGMakerVxAce:
-			tempgoat, err := rpgo.MakeRGSSADv3(inputPath)
+			tempgoat, err := rpgo.MakeRGSSADv3(input)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv3: %s", err)
@@ -114,18 +114,29 @@ func main() {
 		}
 
 		var szStr string
-		var szCompress float32
+		var szCompress float64
+		szCompressFactor := 1000.0
 		var i int
 		szStrList := []string{"B", "KB", "MB", "GB"}
+
+		if output == "kibi" {
+			szCompressFactor = 1024
+			szStrList = []string{"B", "KiB", "MiB", "GiB"}
+		} else {
+			szStr = "bytes"
+		}
+
 		for _, archivefile := range goat.ArchivedFiles {
-			szCompress = float32(archivefile.Size)
+			szCompress = float64(archivefile.Size)
 			i = 0
 
-			for szCompress > 1024 {
-				i++
-				szCompress /= 1024
+			if output != "bytes" {
+				for szCompress > szCompressFactor {
+					i++
+					szCompress /= szCompressFactor
+				}
+				szStr = szStrList[i]
 			}
-			szStr = szStrList[i]
 
 			if i == 0 {
 				fmt.Printf("%s\t(%3.0f %s)\n", archivefile.Name, szCompress, szStr)
@@ -139,7 +150,7 @@ func main() {
 func doDefaults() {
 	fmt.Println("usage: rpgo-cli.go -action=[action] [-io] [-overwrite-files]")
 	flag.PrintDefaults()
-	fmt.Println("\nactions - action flag always required:\n\textract - extract all files in the archive to the output directory; i,o required, overwrite-files optional")
-	fmt.Println("\tlist - list all files in the archive, prints to stdout; ignores flags")
+	fmt.Println("\nactions - action flag always required:\n\textract - extract all files in the archive to the output directory\n\t\ti - input project\n\t\to - output directory\n\t\toverwrite-files - overwrite files toggle")
+	fmt.Println("\tlist - list all files in the archive, prints to stdout; ignores flags\n\t\to - output size format (kilo (default/invalid), kibi, bytes)\n\t\t\tkilo - kilo/megabytes, kibi - kibi/mebibytes, bytes - just bytes")
 	os.Exit(1)
 }
