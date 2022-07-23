@@ -105,3 +105,8 @@ func (*RGSSADv3) decryptFilename(encryptedName []byte, key uint) string {
 
 	return decryptedName
 }
+
+// Just a helper, simplifies call for extract all files
+func (rpg *RGSSADv3) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) error {
+	return (*RGSSAD)(rpg).ExtractAllFiles(outputDirectoryPath, overrideExisting)
+}

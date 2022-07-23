@@ -42,7 +42,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		err = (*rpgo.RGSSAD)(goat).ExtractAllFiles(dumpInto, true)
+		err = goat.ExtractAllFiles(dumpInto, true)
 
 		if err != nil {
 			fmt.Printf("error extracting files: %s", err)
@@ -61,7 +61,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		err = (*rpgo.RGSSAD)(goat).ExtractAllFiles(dumpInto, true)
+		err = goat.ExtractAllFiles(dumpInto, true)
 
 		if err != nil {
 			fmt.Printf("error extracting files: %s", err)

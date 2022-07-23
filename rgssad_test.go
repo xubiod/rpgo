@@ -34,7 +34,7 @@ func TestExtractAllFiles_XP(t *testing.T) {
 		t.FailNow()
 	}
 
-	err = (*RGSSAD)(goat).ExtractAllFiles(extractTo, true)
+	err = goat.ExtractAllFiles(extractTo, true)
 
 	if err != nil {
 		t.Errorf("test/ExtractAllFiles_XP: extract err not nil:\n%s", err.Error())
@@ -109,7 +109,7 @@ func TestExtractAllFiles_VX(t *testing.T) {
 		t.FailNow()
 	}
 
-	err = (*RGSSAD)(goat).ExtractAllFiles(extractTo, true)
+	err = goat.ExtractAllFiles(extractTo, true)
 
 	if err != nil {
 		t.Errorf("test/ExtractAllFiles_VX: extract err not nil:\n%s", err.Error())
@@ -184,7 +184,7 @@ func TestExtractAllFiles_VXAce(t *testing.T) {
 		t.FailNow()
 	}
 
-	err = (*RGSSAD)(goat).ExtractAllFiles(extractTo, true)
+	err = goat.ExtractAllFiles(extractTo, true)
 
 	if err != nil {
 		t.Errorf("test/ExtractAllFiles_VXAce: extract err not nil:\n%s", err.Error())
