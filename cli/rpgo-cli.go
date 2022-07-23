@@ -14,9 +14,9 @@ func main() {
 	var output string
 	var overrideFiles bool
 
-	flag.StringVar(&input, "i", "", "project to do action")
 	flag.StringVar(&action, "action", "", "action to perform, always required, detailed below")
-	flag.StringVar(&output, "o", "", "output directory")
+	flag.StringVar(&input, "i", "", "input (dependent on action)")
+	flag.StringVar(&output, "o", "", "output (dependent on action)")
 	flag.BoolVar(&overrideFiles, "overwrite-files", false, "overwrite existing files")
 
 	flag.Parse()
@@ -150,7 +150,8 @@ func main() {
 func doDefaults() {
 	fmt.Println("usage: rpgo-cli.go -action=[action] [-io] [-overwrite-files]")
 	flag.PrintDefaults()
-	fmt.Println("\nactions - action flag always required:\n\textract - extract all files in the archive to the output directory\n\t\ti - input project\n\t\to - output directory\n\t\toverwrite-files - overwrite files toggle")
-	fmt.Println("\tlist - list all files in the archive, prints to stdout; ignores flags\n\t\to - output size format (kilo (default/invalid), kibi, bytes)\n\t\t\tkilo - kilo/megabytes, kibi - kibi/mebibytes, bytes - just bytes")
+	fmt.Println("\nactions - action flag always required:")
+	fmt.Println("\textract - extract all files in the archive to the output directory\n\t\ti - input project\n\t\to - output directory\n\t\toverwrite-files - overwrite files toggle")
+	fmt.Println("\tlist - list all files in the archive, prints to stdout (use pipes to put into files)\n\t\to - output size format (kilo (default/invalid), kibi, bytes)\n\t\t\tkilo - kilo/megabytes, kibi - kibi/mebibytes, bytes - just bytes")
 	os.Exit(1)
 }
