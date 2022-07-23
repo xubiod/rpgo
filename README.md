@@ -12,15 +12,9 @@ This was mainly an exercise with Go and the testing capabilities.
 
 |File|Coverage|
 |-|-|
-|binary_utils.go|100%|
-|project_generator.go|77.4%|
-|rgssad.go|85.5%|
-|rgssadv1.go|97.5%|
-|rgssadv3.go|97.8%|
-|rpgmaker_version.go|100.0%|
-
-Currently all tests that were in the C# original have been implemented and all
-pass.
-
-Tests were added for encrypted file extracting for all supported versions. This
-is redundant but all tests pass.
+|[binary_utils.go](binary_utils.go)|100%|
+|[project_generator.go](project_generator.go)|77.4%|
+|[rgssad.go](rgssad.go)|85.5%|
+|[rgssadv1.go](rgssadv1.go)|97.5%|
+|[rgssadv3.go](rgssadv3.go)|97.8%|
+|[rpgmaker_version.go](rpgmaker_version.go)|100.0%|
