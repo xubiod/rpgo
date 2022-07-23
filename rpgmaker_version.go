@@ -1,6 +1,6 @@
 package rpgo
 
-import "path"
+import "path/filepath"
 
 // RPGMakerDecrypter.Decrypter/RPGMakerVersion.cs
 
@@ -14,7 +14,7 @@ const (
 )
 
 func GetRPGMakerVersion(inputPath string) RPGMakerVersion {
-	switch path.Base(inputPath) {
+	switch filepath.Base(inputPath) {
 	case XpArchiveName:
 		return RPGMakerXp
 	case VxArchiveName:
