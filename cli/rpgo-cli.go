@@ -137,7 +137,7 @@ func main() {
 }
 
 func doDefaults() {
-	fmt.Println("usage: rpgo-cli.go -i=[archive file] -action=[action] -o=[directory]")
+	fmt.Println("usage: rpgo-cli.go -action=[action] [-io] [-overwrite-files]")
 	flag.PrintDefaults()
 	fmt.Println("\nactions - action flag always required:\n\textract - extract all files in the archive to the output directory; i,o required, overwrite-files optional")
 	fmt.Println("\tlist - list all files in the archive, prints to stdout; ignores flags")
