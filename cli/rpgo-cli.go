@@ -15,7 +15,7 @@ func main() {
 	var overrideFiles bool
 
 	flag.StringVar(&inputPath, "i", "", "project to do action")
-	flag.StringVar(&action, "action", "", "action (extract/decrypt/dump, files/list/ls)")
+	flag.StringVar(&action, "action", "", "action to perform, always required, detailed below")
 	flag.StringVar(&dumpInto, "o", "", "output directory")
 	flag.BoolVar(&overrideFiles, "overwrite-files", false, "overwrite existing files")
 
@@ -87,38 +87,51 @@ func main() {
 		if len(inputPath) == 0 {
 			doDefaults()
 		}
+		var goat *rpgo.RGSSAD
 		switch goatVersion {
 		case rpgo.RPGMakerXp, rpgo.RPGMakerVx:
-			var goat *rpgo.RGSSADv1
-
-			goat, err = rpgo.MakeRGSSADv1(inputPath)
+			tempgoat, err := rpgo.MakeRGSSADv1(inputPath)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv1: %s", err)
 				os.Exit(1)
 			}
 
-			for _, archivefile := range goat.ArchivedFiles {
-				fmt.Printf("%s\t(%d bytes)\n", archivefile.Name, archivefile.Size)
-			}
+			goat = (*rpgo.RGSSAD)(tempgoat)
 
 		case rpgo.RPGMakerVxAce:
-			var goat *rpgo.RGSSADv3
-
-			goat, err = rpgo.MakeRGSSADv3(inputPath)
+			tempgoat, err := rpgo.MakeRGSSADv3(inputPath)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv3: %s", err)
 				os.Exit(1)
 			}
 
-			for _, archivefile := range goat.ArchivedFiles {
-				fmt.Printf("%s\t(%d bytes)\n", archivefile.Name, archivefile.Size)
-			}
-
+			goat = (*rpgo.RGSSAD)(tempgoat)
 		default:
 			fmt.Println("invalid archive")
 			os.Exit(1)
+		}
+
+		var szStr string
+		var szCompress float32
+		var i int
+		szStrList := []string{"B", "KB", "MB", "GB"}
+		for _, archivefile := range goat.ArchivedFiles {
+			szCompress = float32(archivefile.Size)
+			i = 0
+
+			for szCompress > 1024 {
+				i++
+				szCompress /= 1024
+			}
+			szStr = szStrList[i]
+
+			if i == 0 {
+				fmt.Printf("%s\t(%3.0f %s)\n", archivefile.Name, szCompress, szStr)
+			} else {
+				fmt.Printf("%s\t(%3.2f %s)\n", archivefile.Name, szCompress, szStr)
+			}
 		}
 	}
 }
@@ -126,5 +139,7 @@ func main() {
 func doDefaults() {
 	fmt.Println("usage: rpgo-cli.go -i=[archive file] -action=[action] -o=[directory]")
 	flag.PrintDefaults()
+	fmt.Println("\nactions - action flag always required:\n\textract - extract all files in the archive to the output directory; i,o required, overwrite-files optional")
+	fmt.Println("\tlist - list all files in the archive, prints to stdout; ignores flags")
 	os.Exit(1)
 }
