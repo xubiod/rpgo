@@ -25,18 +25,18 @@ func main() {
 		doDefaults()
 	}
 
-	_, err := os.Stat(input)
-	if errors.Is(err, os.ErrNotExist) {
-		fmt.Println(fmt.Errorf("archive does not exist: %s", input).Error())
-		os.Exit(1)
-	}
-
 	goatVersion := rpgo.GetRPGMakerVersion(input)
 
 	switch action {
 	case "extract", "decrypt", "dump":
 		if len(input) == 0 || len(output) == 0 {
 			doDefaults()
+		}
+
+		_, err := os.Stat(input)
+		if errors.Is(err, os.ErrNotExist) {
+			fmt.Println(fmt.Errorf("archive does not exist: %s", input).Error())
+			os.Exit(1)
 		}
 
 		switch goatVersion {
@@ -83,10 +83,17 @@ func main() {
 			os.Exit(1)
 		}
 
-	case "files", "list", "ls":
+	case "files", "list", "ls", "dir":
 		if len(input) == 0 {
 			doDefaults()
 		}
+
+		_, err := os.Stat(input)
+		if errors.Is(err, os.ErrNotExist) {
+			fmt.Println(fmt.Errorf("archive does not exist: %s", input).Error())
+			os.Exit(1)
+		}
+
 		var goat *rpgo.RGSSAD
 		switch goatVersion {
 		case rpgo.RPGMakerXp, rpgo.RPGMakerVx:
@@ -144,6 +151,32 @@ func main() {
 				fmt.Printf("%s\t(%3.2f\t%s)\n", archivefile.Name, szCompress, szStr)
 			}
 		}
+
+	case "justproject":
+		if len(input) == 0 || len(output) == 0 {
+			doDefaults()
+		}
+
+		versionTo := rpgo.RPGMakerInvalid
+
+		switch input {
+		case "XP", "RPG Maker XP", "xp", "rmxp", "rgssad", "Game.rgssad":
+			versionTo = rpgo.RPGMakerXp
+		case "VX", "RPG Maker VX", "vx", "rmvx", "rgss2a", "Game.rgss2a":
+			versionTo = rpgo.RPGMakerVx
+		case "VXAce", "VX Ace", "RPG Maker VXAce", "RPG Maker VX Ace", "vxace", "vxa", "rmvxace", "rmvxa", "rgss3a", "Game.rgss3a":
+			versionTo = rpgo.RPGMakerVxAce
+		default:
+			doDefaults()
+		}
+
+		err := rpgo.GenerateProject(versionTo, output)
+
+		if err != nil {
+			fmt.Printf("error generating project file:")
+		}
+
+		fmt.Println("generated project files")
 	}
 }
 
@@ -152,6 +185,7 @@ func doDefaults() {
 	flag.PrintDefaults()
 	fmt.Println("\nactions - action flag always required:")
 	fmt.Println("\textract/decrypt/dump - extract all files in the archive to the output directory\n\t\ti - input project\n\t\to - output directory\n\t\toverwrite-files - overwrite files toggle")
-	fmt.Println("\tfiles/list/ls - list all files in the archive, prints to stdout (use pipes to put into files)\n\t\to - output size format (kilo (default/invalid), kibi, bytes)\n\t\t\tkilo - kilo/megabytes, kibi - kibi/mebibytes, bytes - just bytes")
+	fmt.Println("\tfiles/list/ls/dir - list all files in the archive, prints to stdout (use pipes to put into files)\n\t\to - output size format (kilo (default/invalid), kibi, bytes)\n\t\t\tkilo - kilo/megabytes, kibi - kibi/mebibytes, bytes - just bytes")
+	fmt.Println("\tjustproject - just generates project files in the requested version to output directory\n\t\ti - version\n\t\t\teither \"xp\"/\"rgssad\", \"vx\"/\"rgss2a\", \"vxace\"/\"rgss3a\" (more variants checked)\n\t\to - output directory")
 	os.Exit(1)
 }
