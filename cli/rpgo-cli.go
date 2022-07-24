@@ -124,11 +124,11 @@ func main() {
 		var szCompress float64
 		szCompressFactor := 1000.0
 		var i int
-		szStrList := []string{" B", "KB", "MB", "GB"}
+		szStrList := []string{"B", "KB", "MB", "GB"}
 
 		if output == "kibi" {
 			szCompressFactor = 1024
-			szStrList = []string{"  B", "KiB", "MiB", "GiB"}
+			szStrList = []string{"B", "KiB", "MiB", "GiB"}
 		} else {
 			szStr = "bytes"
 		}

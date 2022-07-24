@@ -42,12 +42,14 @@ by setting `-o` to `bytes`.
 
 The output format is as follows:
 
-`Name [tab] (Size Unit)`
+`Name [tab] (Size [tab] Unit)`
+
+Name is the file name with its directory in the archive.
 
 Size is either an integer for bytes or floats for other units.
 
-Unit is `_B`, `KB`, `MB`, `GB` for `-o kilo`; `__B`, `KiB`, `MiB`, `GiB` for
-`-o kibi`; `bytes` for `-o bytes`. Replace `_` with spaces.
+Unit is `B`, `KB`, `MB`, `GB` for `-o kilo`; `B`, `KiB`, `MiB`, `GiB` for
+`-o kibi`; `bytes` for `-o bytes`.
 
 ### Only generating project files
 
