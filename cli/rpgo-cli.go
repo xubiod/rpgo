@@ -125,6 +125,7 @@ func main() {
 		szCompressFactor := 1000.0
 		var i int
 		szStrList := []string{"B", "KB", "MB", "GB"}
+		totalBytes := 0.0
 
 		if output == "kibi" {
 			szCompressFactor = 1024
@@ -135,6 +136,7 @@ func main() {
 
 		for _, archivefile := range goat.ArchivedFiles {
 			szCompress = float64(archivefile.Size)
+			totalBytes += szCompress
 			i = 0
 
 			if output != "bytes" {
@@ -151,6 +153,19 @@ func main() {
 				fmt.Printf("%s\t(%3.2f\t%s)\n", archivefile.Name, szCompress, szStr)
 			}
 		}
+
+		szCompress = totalBytes
+		i = 0
+
+		if output != "bytes" {
+			for szCompress > szCompressFactor {
+				i++
+				szCompress /= szCompressFactor
+			}
+			szStr = szStrList[i]
+		}
+
+		fmt.Printf("\ntotal number of files: %d\t(%3.2f\t%s)", len(goat.ArchivedFiles), szCompress, szStr)
 
 	case "justproject":
 		if len(input) == 0 || len(output) == 0 {
