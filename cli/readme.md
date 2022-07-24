@@ -62,7 +62,7 @@ generated files are placed in the output directory given via `-o`.
 
 Acceptable input values are:
 
-- For XP, `XP`, `RPG Maker XP`, `xp`, `rmxp`, `rgssad`, `Game.rgssad`
-- For VX, `VX`, `RPG Maker VX`, `vx`, `rmvx`, `rgss2a`, `Game.rgss2a`
+- For XP, `XP`, `RPG Maker XP`, `xp`, `rmxp`, `rgssad`, `Game.rgssad`, `rxproj`
+- For VX, `VX`, `RPG Maker VX`, `vx`, `rmvx`, `rgss2a`, `Game.rgss2a`, `rvproj`
 - For VX Ace, `VXAce`, `VX Ace`, `RPG Maker VXAce`, `RPG Maker VX Ace`, `vxace`,
-  `rmvxace`, `rmvxa`, `rgss3a`, `Game.rgss3a`
+  `rmvxace`, `rmvxa`, `rgss3a`, `Game.rgss3a`, `rvproj2`

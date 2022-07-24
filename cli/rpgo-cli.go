@@ -160,11 +160,11 @@ func main() {
 		versionTo := rpgo.RPGMakerInvalid
 
 		switch input {
-		case "XP", "RPG Maker XP", "xp", "rmxp", "rgssad", "Game.rgssad":
+		case "XP", "RPG Maker XP", "xp", "rmxp", "rgssad", rpgo.XpArchiveName, rpgo.XpProjectFileExtension:
 			versionTo = rpgo.RPGMakerXp
-		case "VX", "RPG Maker VX", "vx", "rmvx", "rgss2a", "Game.rgss2a":
+		case "VX", "RPG Maker VX", "vx", "rmvx", "rgss2a", rpgo.VxArchiveName, rpgo.VxProjectFileExtension:
 			versionTo = rpgo.RPGMakerVx
-		case "VXAce", "VX Ace", "RPG Maker VXAce", "RPG Maker VX Ace", "vxace", "vxa", "rmvxace", "rmvxa", "rgss3a", "Game.rgss3a":
+		case "VXAce", "VX Ace", "RPG Maker VXAce", "RPG Maker VX Ace", "vxace", "vxa", "rmvxace", "rmvxa", rpgo.VxAceArchiveName, rpgo.VxAceProjectFileExtension:
 			versionTo = rpgo.RPGMakerVxAce
 		default:
 			doDefaults()
