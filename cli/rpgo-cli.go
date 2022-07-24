@@ -43,7 +43,7 @@ func main() {
 		case rpgo.RPGMakerXp, rpgo.RPGMakerVx:
 			var goat *rpgo.RGSSADv1
 
-			goat, err = rpgo.MakeRGSSADv1(input)
+			goat, err = rpgo.NewRGSSADv1(input)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv1: %s", err)
@@ -62,7 +62,7 @@ func main() {
 		case rpgo.RPGMakerVxAce:
 			var goat *rpgo.RGSSADv3
 
-			goat, err = rpgo.MakeRGSSADv3(input)
+			goat, err = rpgo.NewRGSSADv3(input)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv3: %s", err)
@@ -97,7 +97,7 @@ func main() {
 		var goat *rpgo.RGSSAD
 		switch goatVersion {
 		case rpgo.RPGMakerXp, rpgo.RPGMakerVx:
-			tempgoat, err := rpgo.MakeRGSSADv1(input)
+			tempgoat, err := rpgo.NewRGSSADv1(input)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv1: %s", err)
@@ -107,7 +107,7 @@ func main() {
 			goat = (*rpgo.RGSSAD)(tempgoat)
 
 		case rpgo.RPGMakerVxAce:
-			tempgoat, err := rpgo.MakeRGSSADv3(input)
+			tempgoat, err := rpgo.NewRGSSADv3(input)
 
 			if err != nil {
 				fmt.Printf("error making rgssadv3: %s", err)

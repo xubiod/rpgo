@@ -20,7 +20,7 @@ func TestExtractAllFiles_XP(t *testing.T) {
 		t.FailNow()
 	}
 
-	goat, err := MakeRGSSADv1(testArchive)
+	goat, err := NewRGSSADv1(testArchive)
 
 	if err != nil {
 		t.Errorf("test/ExtractAllFiles_XP: make rgssad err not nil:\n%s", err.Error())
@@ -95,7 +95,7 @@ func TestExtractAllFiles_VX(t *testing.T) {
 		t.FailNow()
 	}
 
-	goat, err := MakeRGSSADv1(testArchive)
+	goat, err := NewRGSSADv1(testArchive)
 
 	if err != nil {
 		t.Errorf("test/ExtractAllFiles_VX: make rgssad err not nil:\n%s", err.Error())
@@ -170,7 +170,7 @@ func TestExtractAllFiles_VXAce(t *testing.T) {
 		t.FailNow()
 	}
 
-	goat, err := MakeRGSSADv3(testArchive)
+	goat, err := NewRGSSADv3(testArchive)
 
 	if err != nil {
 		t.Errorf("test/ExtractAllFiles_VXAce: make rgssad err not nil:\n%s", err.Error())

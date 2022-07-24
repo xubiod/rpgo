@@ -9,6 +9,9 @@ import (
 	"path"
 )
 
+// Generates project files appropriate for the given version.
+//
+// Returns nil on success, error otherwise.
 func GenerateProject(version RPGMakerVersion, outputPath string) error {
 	var content string
 	var extension string

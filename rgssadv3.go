@@ -10,8 +10,12 @@ import (
 
 type RGSSADv3 RGSSAD
 
-func MakeRGSSADv3(filepath string) (*RGSSADv3, error) {
-	created := (*RGSSADv3)(MakeRGSSAD(filepath))
+// Creates a new RGSSADv3 structure and configures it for use.
+//
+// Returns a pointer to the created structure, nil on success, nil and error
+// otherwise.
+func NewRGSSADv3(filepath string) (*RGSSADv3, error) {
+	created := (*RGSSADv3)(NewRGSSAD(filepath))
 
 	version, err := ((*RGSSAD)(created)).GetVersion()
 
@@ -24,6 +28,10 @@ func MakeRGSSADv3(filepath string) (*RGSSADv3, error) {
 	return created, nil
 }
 
+// Reads the encrypted RGSSADv3 archive and generates a ArchivedFile slice for
+// the RGSSAD structure.
+//
+// This function is meant for internal use in NewRGSSADv3.
 func (rpg *RGSSADv3) readRGSSAD() {
 	rpg.ByteReader.Seek(8, io.SeekStart)
 
@@ -76,11 +84,21 @@ func (rpg *RGSSADv3) readRGSSAD() {
 	}
 }
 
+// Decrypts an integer from the RGSSADv3 archive.
+//
+// This function is meant for internal use by readRGSSAD.
+//
+// Returns the decrypted integer.
 func (*RGSSADv3) decryptInteger(value int, key uint) int {
 	result := int64(value) ^ int64(key)
 	return int(result)
 }
 
+// Decrypts a filename from the RGSSADv3 archive.
+//
+// This function is meant for internal use by readRGSSAD.
+//
+// Returns the decrypted filename as a string.
 func (*RGSSADv3) decryptFilename(encryptedName []byte, key uint) string {
 	var decryptedName string
 
@@ -101,7 +119,10 @@ func (*RGSSADv3) decryptFilename(encryptedName []byte, key uint) string {
 	return decryptedName
 }
 
-// Just a helper, simplifies call for extract all files
+// See ExtractAllFiles in rgssad.go
+//
+// A wrapper for ExtractAllFiles to remove the need for end-user casting to
+// *RGSSAD.
 func (rpg *RGSSADv3) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) error {
 	return (*RGSSAD)(rpg).ExtractAllFiles(outputDirectoryPath, overrideExisting)
 }

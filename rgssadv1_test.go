@@ -15,7 +15,7 @@ func TestRGSSADv1_XP(t *testing.T) {
 		t.FailNow()
 	}
 
-	goat, err := MakeRGSSADv1(testArchive)
+	goat, err := NewRGSSADv1(testArchive)
 
 	if err != nil {
 		t.Errorf("test/RGSSADv1_XP: err not nil:\n%s", err.Error())
@@ -68,7 +68,7 @@ func TestRGSSADv1_VX(t *testing.T) {
 		t.FailNow()
 	}
 
-	goat, err := MakeRGSSADv1(testArchive)
+	goat, err := NewRGSSADv1(testArchive)
 
 	if err != nil {
 		t.Errorf("test/RGSSADv1_VX: err not nil:\n%s", err.Error())

@@ -13,6 +13,7 @@ import (
 	"strings"
 )
 
+// The generic structure of a RPG Maker encrypted archive.
 type RGSSAD struct {
 	Filepath      string
 	Data          []byte
@@ -20,7 +21,10 @@ type RGSSAD struct {
 	ArchivedFiles []RPGMakerArchivedFile
 }
 
-func MakeRGSSAD(filepath string) *RGSSAD {
+// Creates a new RGSSAD structure and configures it for use.
+//
+// Returns a pointer to the created structure.
+func NewRGSSAD(filepath string) *RGSSAD {
 	created := new(RGSSAD)
 	created.Filepath = filepath
 
@@ -40,6 +44,10 @@ func MakeRGSSAD(filepath string) *RGSSAD {
 	return created
 }
 
+// Gets the RPGMakerVersion of the encrypted archive.
+//
+// Returns the version and nil for error on success; RPGMakerInvalid and an
+// error otherwise.
 func (rpg *RGSSAD) GetVersion() (RPGMakerVersion, error) {
 	var header string
 
@@ -54,6 +62,9 @@ func (rpg *RGSSAD) GetVersion() (RPGMakerVersion, error) {
 	return RPGMakerVersion(result), err
 }
 
+// Extracts the given archived file from the encrypted archive.
+//
+// Returns nil on success, error otherwise.
 func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirectoryPath string, overwriteExisting bool, createDirectory bool) error {
 	var outputPath string
 
@@ -100,6 +111,9 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 	return nil
 }
 
+// Extracts all files from the archive.
+//
+// Returns nil on success, error otherwise.
 func (rpg *RGSSAD) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) error {
 	for _, archivedFile := range rpg.ArchivedFiles {
 		err := rpg.ExtractFile(archivedFile, outputDirectoryPath, overrideExisting, true)
@@ -111,6 +125,9 @@ func (rpg *RGSSAD) ExtractAllFiles(outputDirectoryPath string, overrideExisting 
 	return nil
 }
 
+// Decrypts the file data from a byte slice into another byte slice.
+//
+// This function is meant for internal use only in ExtractFile.
 func (*RGSSAD) decryptFileData(encryptedFileData []byte, key uint32) []byte {
 	decryptedFileData := make([]byte, len(encryptedFileData))
 

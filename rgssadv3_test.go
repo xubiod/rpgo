@@ -15,7 +15,7 @@ func TestRGSSADv3_VXAce(t *testing.T) {
 		t.FailNow()
 	}
 
-	goat, err := MakeRGSSADv3(testArchive)
+	goat, err := NewRGSSADv3(testArchive)
 
 	if err != nil {
 		t.Errorf("test/RGSSADv3_VXAce: err not nil:\n%s", err.Error())

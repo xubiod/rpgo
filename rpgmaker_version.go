@@ -13,6 +13,10 @@ const (
 	RPGMakerVxAce
 )
 
+// Gets an input filepath to an encrypted archive as a string, returns what
+// RPGMakerVersion it is.
+//
+// Returns RPGMakerInvalid for an invalid archive file name and extension.
 func GetRPGMakerVersion(inputPath string) RPGMakerVersion {
 	switch filepath.Base(inputPath) {
 	case XpArchiveName:

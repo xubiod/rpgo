@@ -10,8 +10,12 @@ import (
 
 type RGSSADv1 RGSSAD
 
-func MakeRGSSADv1(filepath string) (*RGSSADv1, error) {
-	created := (*RGSSADv1)(MakeRGSSAD(filepath))
+// Creates a new RGSSADv1 structure and configures it for use.
+//
+// Returns a pointer to the created structure, nil on success, nil and error
+// otherwise.
+func NewRGSSADv1(filepath string) (*RGSSADv1, error) {
+	created := (*RGSSADv1)(NewRGSSAD(filepath))
 
 	version, err := ((*RGSSAD)(created)).GetVersion()
 
@@ -24,6 +28,10 @@ func MakeRGSSADv1(filepath string) (*RGSSADv1, error) {
 	return created, nil
 }
 
+// Reads the encrypted RGSSADv1 archive and generates a ArchivedFile slice for
+// the RGSSAD structure.
+//
+// This function is meant for internal use in NewRGSSADv1.
 func (rpg *RGSSADv1) readRGSSAD() {
 	key := RGASSADv1Key
 
@@ -65,6 +73,12 @@ func (rpg *RGSSADv1) readRGSSAD() {
 	}
 }
 
+// Decrypts an integer from the RGSSADv1 archive, modifying the key for the next
+// decryption afterwards.
+//
+// This function is meant for internal use by readRGSSAD.
+//
+// Returns the decrypted integer.
 func (*RGSSADv1) decryptInteger(value int, key *uint) int {
 	result := int64(value) ^ int64(*key)
 	*key *= 7
@@ -74,6 +88,12 @@ func (*RGSSADv1) decryptInteger(value int, key *uint) int {
 	return int(result)
 }
 
+// Decrypts a filename from the RGSSADv1 archive, modifying the key for the next
+// decryption afterwards.
+//
+// This function is meant for internal use by readRGSSAD.
+//
+// Returns the decrypted filename as a string.
 func (*RGSSADv1) decryptFilename(encryptedName []byte, key *uint) string {
 	var decryptedName string
 
@@ -92,7 +112,10 @@ func (*RGSSADv1) decryptFilename(encryptedName []byte, key *uint) string {
 	return decryptedName
 }
 
-// Just a helper, simplifies call for extract all files
+// See ExtractAllFiles in rgssad.go
+//
+// A wrapper for ExtractAllFiles to remove the need for end-user casting to
+// *RGSSAD.
 func (rpg *RGSSADv1) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) error {
 	return (*RGSSAD)(rpg).ExtractAllFiles(outputDirectoryPath, overrideExisting)
 }
