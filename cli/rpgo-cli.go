@@ -164,7 +164,7 @@ func main() {
 			versionTo = rpgo.RPGMakerXp
 		case "VX", "RPG Maker VX", "vx", "rmvx", "rgss2a", rpgo.VxArchiveName, rpgo.VxProjectFileExtension:
 			versionTo = rpgo.RPGMakerVx
-		case "VXAce", "VX Ace", "RPG Maker VXAce", "RPG Maker VX Ace", "vxace", "vxa", "rmvxace", "rmvxa", rpgo.VxAceArchiveName, rpgo.VxAceProjectFileExtension:
+		case "VXAce", "VX Ace", "RPG Maker VXAce", "RPG Maker VX Ace", "vxace", "vxa", "rmvxace", "rmvxa", "rgss3a", rpgo.VxAceArchiveName, rpgo.VxAceProjectFileExtension:
 			versionTo = rpgo.RPGMakerVxAce
 		default:
 			doDefaults()
