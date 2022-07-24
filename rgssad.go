@@ -54,7 +54,6 @@ func (rpg *RGSSAD) GetVersion() (RPGMakerVersion, error) {
 	return RPGMakerVersion(result), err
 }
 
-// Currently overwrite existing is ignored
 func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirectoryPath string, overwriteExisting bool, createDirectory bool) error {
 	var outputPath string
 
@@ -107,7 +106,6 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 	return nil
 }
 
-// Currently overwrite existing is ignored
 func (rpg *RGSSAD) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) error {
 	for _, archivedFile := range rpg.ArchivedFiles {
 		err := rpg.ExtractFile(archivedFile, outputDirectoryPath, overrideExisting, true)
