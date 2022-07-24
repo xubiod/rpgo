@@ -36,8 +36,6 @@ func (rpg *RGSSADv3) readRGSSAD() {
 	key *= 9
 	key += 3
 
-	// key := uint(RGASSADv1Key)
-
 	for {
 		newArchivedFile := new(RPGMakerArchivedFile)
 
@@ -92,9 +90,6 @@ func (*RGSSADv3) decryptFilename(encryptedName []byte, key uint) string {
 	j := 0
 
 	for i < len(encryptedName) {
-		// if j == 4 {
-		// 	j = 0
-		// }
 		j %= 4
 
 		decryptedName += string(rune(encryptedName[i] ^ keyBytes[j]))

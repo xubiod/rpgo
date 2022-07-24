@@ -34,6 +34,7 @@ func (rpg *RGSSADv1) readRGSSAD() {
 	for {
 		newArchivedFile := new(RPGMakerArchivedFile)
 
+		// NAME
 		rpg.ByteReader.Read(t)
 		num := int(binary.LittleEndian.Uint32(t))
 
@@ -44,11 +45,13 @@ func (rpg *RGSSADv1) readRGSSAD() {
 		rpg.ByteReader.Read(u)
 		newArchivedFile.Name = rpg.decryptFilename(u, &key)
 
+		// SIZE
 		rpg.ByteReader.Read(t)
 		num = int(binary.LittleEndian.Uint32(t))
 
 		newArchivedFile.Size = rpg.decryptInteger(num, &key)
 
+		// OFFSET, KEY
 		newArchivedFile.Offset, _ = rpg.ByteReader.Seek(0, io.SeekCurrent)
 		newArchivedFile.Key = key
 
@@ -56,8 +59,7 @@ func (rpg *RGSSADv1) readRGSSAD() {
 
 		rpg.ByteReader.Seek(int64(newArchivedFile.Size), io.SeekCurrent)
 
-		// status, _ := rpg.ByteReader.Seek(0, io.SeekCurrent)
-		if rpg.ByteReader.Len() == 0 { // len returns UNREAD bytes what the FUCK
+		if rpg.ByteReader.Len() == 0 {
 			break
 		}
 	}
@@ -73,7 +75,6 @@ func (*RGSSADv1) decryptInteger(value int, key *uint) int {
 }
 
 func (*RGSSADv1) decryptFilename(encryptedName []byte, key *uint) string {
-	//decryptedName := make([]byte, len(encryptedName))
 	var decryptedName string
 
 	i := 0

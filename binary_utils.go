@@ -8,7 +8,6 @@ import (
 // RPGMakerDecrypter.Decrypter/BinaryUtils.cs
 
 func ReadCString(reader *bytes.Reader, maxLength int) (string, error) {
-	// startPostion := reader.
 	stringLength, _ := reader.Seek(0, io.SeekCurrent)
 	var readIn byte
 	var err error
