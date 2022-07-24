@@ -151,7 +151,7 @@ func doDefaults() {
 	fmt.Println("usage: rpgo-cli.go -action=[action] [-io] [-overwrite-files]")
 	flag.PrintDefaults()
 	fmt.Println("\nactions - action flag always required:")
-	fmt.Println("\textract - extract all files in the archive to the output directory\n\t\ti - input project\n\t\to - output directory\n\t\toverwrite-files - overwrite files toggle")
-	fmt.Println("\tlist - list all files in the archive, prints to stdout (use pipes to put into files)\n\t\to - output size format (kilo (default/invalid), kibi, bytes)\n\t\t\tkilo - kilo/megabytes, kibi - kibi/mebibytes, bytes - just bytes")
+	fmt.Println("\textract/decrypt/dump - extract all files in the archive to the output directory\n\t\ti - input project\n\t\to - output directory\n\t\toverwrite-files - overwrite files toggle")
+	fmt.Println("\tfiles/list/ls - list all files in the archive, prints to stdout (use pipes to put into files)\n\t\to - output size format (kilo (default/invalid), kibi, bytes)\n\t\t\tkilo - kilo/megabytes, kibi - kibi/mebibytes, bytes - just bytes")
 	os.Exit(1)
 }
