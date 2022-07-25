@@ -6,6 +6,10 @@ version [here](https://github.com/uuksu/RPGMakerDecrypter/).
 
 This was mainly an exercise with Go and the testing capabilities.
 
+## CLI
+
+The CLI has been moved to a [separate repository](https://github.com/xubiod/rpgo-cli). 
+
 ## Tests
 
 **Current coverage as reported by `go test -cover`: 90.9%**
