@@ -1,4 +1,4 @@
-# RPGO [![Go](https://github.com/xubiod/rpgo/actions/workflows/go.yml/badge.svg)](https://github.com/xubiod/rpgo/actions/workflows/go.yml)
+# RPGO [![Go](https://github.com/xubiod/rpgo/actions/workflows/go.yml/badge.svg)](https://github.com/xubiod/rpgo/actions/workflows/go.yml) [![Go Reference](https://pkg.go.dev/badge/github.com/xubiod/rpgo.svg)](https://pkg.go.dev/github.com/xubiod/rpgo)
 
 This is currently a direct translation of uuksuu's RPGMakerDecrypter project,
 specifically the Decrypter namespace and the Tests namespace. You can go to that
