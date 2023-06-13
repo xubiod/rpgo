@@ -32,6 +32,7 @@ func NewRGSSAD(filepath string) *RGSSAD {
 	created.Filepath = filepath
 
 	f, _ := os.Open(created.Filepath)
+	defer f.Close()
 
 	var err error
 	created.Data, err = io.ReadAll(f)
@@ -39,8 +40,6 @@ func NewRGSSAD(filepath string) *RGSSAD {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	f.Close()
 
 	created.ByteReader = *bytes.NewReader(created.Data)
 
