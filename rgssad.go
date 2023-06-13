@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -27,23 +26,22 @@ type RGSSAD struct {
 // Creates a new RGSSAD structure and configures it for use.
 //
 // Returns a pointer to the created structure.
-func NewRGSSAD(filepath string) *RGSSAD {
-	created := new(RGSSAD)
+func NewRGSSAD(filepath string) (created *RGSSAD, err error) {
+	created = new(RGSSAD)
 	created.Filepath = filepath
 
 	f, _ := os.Open(created.Filepath)
 	defer f.Close()
 
-	var err error
 	created.Data, err = io.ReadAll(f)
 
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 
 	created.ByteReader = *bytes.NewReader(created.Data)
 
-	return created
+	return
 }
 
 // GetVersion
@@ -71,7 +69,7 @@ func (rpg *RGSSAD) GetVersion() (RPGMakerVersion, error) {
 // Extracts the given archived file from the encrypted archive.
 //
 // Returns nil on success, error otherwise.
-func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirectoryPath string, overwriteExisting bool, createDirectory bool) error {
+func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirectoryPath string, overwriteExisting bool, createDirectory bool) (err error) {
 	var outputPath string
 
 	if createDirectory {
@@ -98,18 +96,28 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 		outputPath = filepath.Join(outputDirectoryPath, filename)
 	}
 
-	rpg.ByteReader.Seek(archivedFile.Offset, io.SeekStart)
+	_, err = rpg.ByteReader.Seek(archivedFile.Offset, io.SeekStart)
+	if err != nil {
+		return
+	}
+
 	data := make([]byte, archivedFile.Size)
-	rpg.ByteReader.Read(data)
+	_, err = rpg.ByteReader.Read(data)
+	if err != nil {
+		return
+	}
 
 	if _, err := os.Stat(outputPath); os.IsNotExist(err) || overwriteExisting {
 		finalFile, err := os.Create(outputPath)
 
 		if err != nil {
-			return err
+			return
 		}
 
-		finalFile.Write(rpg.decryptFileData(data, uint32(archivedFile.Key)))
+		_, err = finalFile.Write(rpg.decryptFileData(data, uint32(archivedFile.Key)))
+		if err != nil {
+			return
+		}
 
 		return finalFile.Close()
 	}
