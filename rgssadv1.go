@@ -17,7 +17,12 @@ type RGSSADv1 RGSSAD
 // Returns a pointer to the created structure, nil on success, nil and error
 // otherwise.
 func NewRGSSADv1(filepath string) (*RGSSADv1, error) {
-	created := (*RGSSADv1)(NewRGSSAD(filepath))
+	realNew, err := NewRGSSAD(filepath)
+	if err != nil {
+		return nil, err
+	}
+
+	created := (*RGSSADv1)(realNew)
 
 	version, err := ((*RGSSAD)(created)).GetVersion()
 
@@ -39,24 +44,36 @@ func (rpg *RGSSADv1) readRGSSAD() {
 
 	t := make([]byte, 4)
 
-	rpg.ByteReader.Seek(8, io.SeekStart)
+	_, err := rpg.ByteReader.Seek(8, io.SeekStart)
+	if err != nil {
+		return
+	}
 
 	for {
 		newArchivedFile := new(RPGMakerArchivedFile)
 
 		// NAME
-		rpg.ByteReader.Read(t)
+		_, err = rpg.ByteReader.Read(t)
+		if err != nil {
+			return
+		}
 		num := int(binary.LittleEndian.Uint32(t))
 
-		nameLen := rpg.decryptInteger(int(num), &key)
+		nameLen := rpg.decryptInteger(num, &key)
 
 		u := make([]byte, nameLen)
 
-		rpg.ByteReader.Read(u)
+		_, err = rpg.ByteReader.Read(u)
+		if err != nil {
+			return
+		}
 		newArchivedFile.Name = rpg.decryptFilename(u, &key)
 
 		// SIZE
-		rpg.ByteReader.Read(t)
+		_, err = rpg.ByteReader.Read(t)
+		if err != nil {
+			return
+		}
 		num = int(binary.LittleEndian.Uint32(t))
 
 		newArchivedFile.Size = rpg.decryptInteger(num, &key)
@@ -67,7 +84,10 @@ func (rpg *RGSSADv1) readRGSSAD() {
 
 		rpg.ArchivedFiles = append(rpg.ArchivedFiles, *newArchivedFile)
 
-		rpg.ByteReader.Seek(int64(newArchivedFile.Size), io.SeekCurrent)
+		_, err = rpg.ByteReader.Seek(int64(newArchivedFile.Size), io.SeekCurrent)
+		if err != nil {
+			return
+		}
 
 		if rpg.ByteReader.Len() == 0 {
 			break
