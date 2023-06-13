@@ -80,7 +80,7 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 
 		for _, itm := range subDirectories {
 			outputPath = filepath.Join(outputPath, itm)
-			err := os.Mkdir(outputPath, os.ModeDir)
+			err = os.Mkdir(outputPath, os.ModeDir)
 			_, err2 := os.Stat(filepath.Dir(outputPath))
 
 			if os.IsNotExist(err) && os.IsNotExist(err2) {
@@ -107,8 +107,9 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 		return
 	}
 
-	if _, err := os.Stat(outputPath); os.IsNotExist(err) || overwriteExisting {
-		finalFile, err := os.Create(outputPath)
+	if _, err = os.Stat(outputPath); os.IsNotExist(err) || overwriteExisting {
+		var finalFile *os.File
+		finalFile, err = os.Create(outputPath)
 
 		if err != nil {
 			return
@@ -132,7 +133,7 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 // Returns nil on success, error otherwise.
 func (rpg *RGSSAD) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) (err error) {
 	for _, archivedFile := range rpg.ArchivedFiles {
-		err := rpg.ExtractFile(archivedFile, outputDirectoryPath, overrideExisting, true)
+		err = rpg.ExtractFile(archivedFile, outputDirectoryPath, overrideExisting, true)
 		if err != nil {
 			return err
 		}
