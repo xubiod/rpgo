@@ -17,7 +17,11 @@ type RGSSADv3 RGSSAD
 // Returns a pointer to the created structure, nil on success, nil and error
 // otherwise.
 func NewRGSSADv3(filepath string) (created *RGSSADv3, err error) {
-	created = (*RGSSADv3)(NewRGSSAD(filepath))
+	realNew, err := NewRGSSAD(filepath)
+	if err != nil {
+		return nil, err
+	}
+	created = (*RGSSADv3)(realNew)
 
 	version, err := ((*RGSSAD)(created)).GetVersion()
 
@@ -35,10 +39,16 @@ func NewRGSSADv3(filepath string) (created *RGSSADv3, err error) {
 //
 // This function is meant for internal use in NewRGSSADv3.
 func (rpg *RGSSADv3) readRGSSAD() {
-	rpg.ByteReader.Seek(8, io.SeekStart)
+	_, err := rpg.ByteReader.Seek(8, io.SeekStart)
+	if err != nil {
+		return
+	}
 
 	t := make([]byte, 4)
-	rpg.ByteReader.Read(t)
+	_, err = rpg.ByteReader.Read(t)
+	if err != nil {
+		return
+	}
 	num := int(binary.LittleEndian.Uint32(t))
 
 	key := uint(num)
@@ -50,19 +60,28 @@ func (rpg *RGSSADv3) readRGSSAD() {
 		newArchivedFile := new(RPGMakerArchivedFile)
 
 		// OFFSET
-		rpg.ByteReader.Read(t)
+		_, err = rpg.ByteReader.Read(t)
+		if err != nil {
+			return
+		}
 		num = int(binary.LittleEndian.Uint32(t))
 
 		newArchivedFile.Offset = int64(rpg.decryptInteger(num, key))
 
 		// SIZE
-		rpg.ByteReader.Read(t)
+		_, err = rpg.ByteReader.Read(t)
+		if err != nil {
+			return
+		}
 		num = int(binary.LittleEndian.Uint32(t))
 
 		newArchivedFile.Size = rpg.decryptInteger(num, key)
 
 		// KEY
-		rpg.ByteReader.Read(t)
+		_, err = rpg.ByteReader.Read(t)
+		if err != nil {
+			return
+		}
 		num = int(binary.LittleEndian.Uint32(t))
 
 		newArchivedFile.Key = uint(rpg.decryptInteger(num, key))
@@ -72,14 +91,20 @@ func (rpg *RGSSADv3) readRGSSAD() {
 		}
 
 		// NAME
-		rpg.ByteReader.Read(t)
+		_, err = rpg.ByteReader.Read(t)
+		if err != nil {
+			return
+		}
 		num := int(binary.LittleEndian.Uint32(t))
 
 		nameLen := rpg.decryptInteger(num, key)
 
 		u := make([]byte, nameLen)
 
-		rpg.ByteReader.Read(u)
+		_, err = rpg.ByteReader.Read(u)
+		if err != nil {
+			return
+		}
 		newArchivedFile.Name = rpg.decryptFilename(u, key)
 
 		rpg.ArchivedFiles = append(rpg.ArchivedFiles, *newArchivedFile)
