@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -35,7 +34,7 @@ func NewRGSSAD(filepath string) *RGSSAD {
 	f, _ := os.Open(created.Filepath)
 
 	var err error
-	created.Data, err = ioutil.ReadAll(f)
+	created.Data, err = io.ReadAll(f)
 
 	if err != nil {
 		log.Fatal(err)
