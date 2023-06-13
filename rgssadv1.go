@@ -10,6 +10,8 @@ import (
 
 type RGSSADv1 RGSSAD
 
+// NewRGSSADv1
+//
 // Creates a new RGSSADv1 structure and configures it for use.
 //
 // Returns a pointer to the created structure, nil on success, nil and error
@@ -94,9 +96,7 @@ func (*RGSSADv1) decryptInteger(value int, key *uint) int {
 // This function is meant for internal use by readRGSSAD.
 //
 // Returns the decrypted filename as a string.
-func (*RGSSADv1) decryptFilename(encryptedName []byte, key *uint) string {
-	var decryptedName string
-
+func (*RGSSADv1) decryptFilename(encryptedName []byte, key *uint) (decryptedName string) {
 	i := 0
 
 	for i < len(encryptedName) {
@@ -112,8 +112,9 @@ func (*RGSSADv1) decryptFilename(encryptedName []byte, key *uint) string {
 	return decryptedName
 }
 
-// See ExtractAllFiles in rgssad.go
+// ExtractAllFiles
 //
+// See ExtractAllFiles in rgssad.go.
 // A wrapper for ExtractAllFiles to remove the need for end-user casting to
 // *RGSSAD.
 func (rpg *RGSSADv1) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) error {

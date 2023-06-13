@@ -9,10 +9,12 @@ import (
 	"path"
 )
 
+// GenerateProject
+//
 // Generates project files appropriate for the given version.
 //
 // Returns nil on success, error otherwise.
-func GenerateProject(version RPGMakerVersion, outputPath string) error {
+func GenerateProject(version RPGMakerVersion, outputPath string) (err error) {
 	var content string
 	var extension string
 	var ini string
@@ -35,6 +37,7 @@ func GenerateProject(version RPGMakerVersion, outputPath string) error {
 	}
 
 	file, err := os.Create(path.Join(outputPath, fmt.Sprintf("Game.%s", extension)))
+	defer file.Close()
 
 	if err != nil {
 		return err
@@ -43,13 +46,14 @@ func GenerateProject(version RPGMakerVersion, outputPath string) error {
 	_, err = file.WriteString(content)
 
 	if err != nil {
-		file.Close()
+		//file.Close()
 		return err
 	}
 
-	file.Close()
+	//file.Close()
 
 	file, err = os.Create(path.Join(outputPath, "Game.ini"))
+	defer file.Close()
 
 	if err != nil {
 		return err
@@ -58,11 +62,11 @@ func GenerateProject(version RPGMakerVersion, outputPath string) error {
 	_, err = file.WriteString(ini)
 
 	if err != nil {
-		file.Close()
+		//file.Close()
 		return err
 	}
 
-	file.Close()
+	//file.Close()
 
 	return nil
 }

@@ -13,6 +13,8 @@ import (
 	"strings"
 )
 
+// RGSSAD
+//
 // The generic structure of a RPG Maker encrypted archive.
 type RGSSAD struct {
 	Filepath      string
@@ -21,6 +23,8 @@ type RGSSAD struct {
 	ArchivedFiles []RPGMakerArchivedFile
 }
 
+// NewRGSSAD
+//
 // Creates a new RGSSAD structure and configures it for use.
 //
 // Returns a pointer to the created structure.
@@ -44,6 +48,8 @@ func NewRGSSAD(filepath string) *RGSSAD {
 	return created
 }
 
+// GetVersion
+//
 // Gets the RPGMakerVersion of the encrypted archive.
 //
 // Returns the version and nil for error on success; RPGMakerInvalid and an
@@ -62,6 +68,8 @@ func (rpg *RGSSAD) GetVersion() (RPGMakerVersion, error) {
 	return RPGMakerVersion(result), err
 }
 
+// ExtractFile
+//
 // Extracts the given archived file from the encrypted archive.
 //
 // Returns nil on success, error otherwise.
@@ -111,10 +119,12 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 	return nil
 }
 
+// ExtractAllFiles
+//
 // Extracts all files from the archive.
 //
 // Returns nil on success, error otherwise.
-func (rpg *RGSSAD) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) error {
+func (rpg *RGSSAD) ExtractAllFiles(outputDirectoryPath string, overrideExisting bool) (err error) {
 	for _, archivedFile := range rpg.ArchivedFiles {
 		err := rpg.ExtractFile(archivedFile, outputDirectoryPath, overrideExisting, true)
 		if err != nil {

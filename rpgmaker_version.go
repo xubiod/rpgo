@@ -13,6 +13,8 @@ const (
 	RPGMakerVxAce
 )
 
+// GetRPGMakerVersion
+//
 // Gets an input filepath to an encrypted archive as a string, returns what
 // RPGMakerVersion it is.
 //

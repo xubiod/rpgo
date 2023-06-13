@@ -2,6 +2,8 @@ package rpgo
 
 // RPGMakerDecrypter.Decrypter/ArchivedFile.cs
 
+// RPGMakerArchivedFile
+//
 // A file in an RPG Maker encrypted archive.
 type RPGMakerArchivedFile struct {
 	Name   string // The file name and path in the archive

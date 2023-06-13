@@ -21,11 +21,17 @@ const RGASSDv3 = 3 // The version number for RMVXAce archives.
 
 const RGASSADv1Key uint = 0xDEADCAFE // The starting key for RMXP and RMVX archives.
 
+// XpIniFileContents
+//
 // The contents of "Game.ini" for RMXP projects.
 const XpIniFileContents = "[Game]\r\nLibrary=RGS104E.dll\r\nScripts=Data\\Scripts.rxdata\r\nTitle=DecryptedProject\r\nRTP1=Standard\r\nRTP2=\r\nRTP3="
 
+// VxIniFileContents
+//
 // The contents of "Game.ini" for RMVX projects.
 const VxIniFileContents = "[Game]\r\nRTP=RPGVX\r\nLibrary=RGS202E.dll\r\nScripts=Data\\Scripts.rvdata\r\nTitle=DecryptedProject"
 
+// VxAceIniFileContents
+//
 // The contents of "Game.ini" for RMVXAce projects.
 const VxAceIniFileContents = "[Game]\r\nRTP=RPGVXAce\r\nLibrary=RGSS300.dll\r\nScripts=Data\\Scripts.rvdata2\r\nTitle=DecryptedProject"
