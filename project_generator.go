@@ -37,6 +37,11 @@ func GenerateProject(version RPGMakerVersion, outputPath string) (err error) {
 	}
 
 	file, err := os.Create(path.Join(outputPath, fmt.Sprintf("Game.%s", extension)))
+
+	if err != nil {
+		return err
+	}
+
 	defer file.Close()
 
 	if err != nil {
@@ -53,6 +58,11 @@ func GenerateProject(version RPGMakerVersion, outputPath string) (err error) {
 	//file.Close()
 
 	file, err = os.Create(path.Join(outputPath, "Game.ini"))
+
+	if err != nil {
+		return err
+	}
+
 	defer file.Close()
 
 	if err != nil {
