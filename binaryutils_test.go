@@ -3,7 +3,7 @@ package rpgo
 import (
 	"bytes"
 	"errors"
-	"io/ioutil"
+	"io"
 	"os"
 	"testing"
 )
@@ -18,7 +18,7 @@ func TestArchiveHeader_XP(t *testing.T) {
 
 	f, _ := os.Open(testArchive)
 
-	data, _ := ioutil.ReadAll(f)
+	data, _ := io.ReadAll(f)
 	byteReader := *bytes.NewReader(data)
 	f.Close()
 
@@ -52,7 +52,7 @@ func TestArchiveHeader_VX(t *testing.T) {
 
 	f, _ := os.Open(testArchive)
 
-	data, _ := ioutil.ReadAll(f)
+	data, _ := io.ReadAll(f)
 	byteReader := *bytes.NewReader(data)
 	f.Close()
 
@@ -85,7 +85,7 @@ func TestArchiveHeader_VXAce(t *testing.T) {
 
 	f, _ := os.Open(testArchive)
 
-	data, _ := ioutil.ReadAll(f)
+	data, _ := io.ReadAll(f)
 	byteReader := *bytes.NewReader(data)
 	f.Close()
 
