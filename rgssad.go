@@ -90,7 +90,7 @@ func (rpg *RGSSAD) ExtractFile(archivedFile RPGMakerArchivedFile, outputDirector
 
 		outputPath = filepath.Join(outputPath, strings.Split(archivedFile.Name, string(filepath.Separator))[len(subDirectories)])
 	} else {
-		splitted := strings.Split(archivedFile.Name, "\\")
+		splitted := strings.Split(archivedFile.Name, string(filepath.Separator))
 		filename := splitted[len(splitted)-1]
 
 		outputPath = filepath.Join(outputDirectoryPath, filename)
